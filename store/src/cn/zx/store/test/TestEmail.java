@@ -1,0 +1,58 @@
+package cn.zx.store.test;
+
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.Message.RecipientType;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+public class TestEmail {
+
+	public static void main(String[] args) throws Exception {
+		// 0.1 服务器的设置
+		Properties props = new Properties();
+		props.setProperty("mail.host", "smtp.mdzz8.cn");
+		props.setProperty("mail.smtp.auth", "true");
+		
+		//props.setProperty("mail.smtp.port","smtp.mdzz8.cn");
+		//props.put("mail.smtp.auth", "false");
+        //465端口开启SSL 最关键的一步
+		//props.put("mail.smtp.ssl.enable", "true");
+		
+		// 0.2 账号和密码
+		Authenticator authenticator = new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				// 126账号和密码（模拟账号，需要自己注册）
+				//return new PasswordAuthentication("itcast", "123456");
+				return new PasswordAuthentication("zc@mdzz8.cn", "zhangxu000");
+			}
+		};
+
+		// 1 与126服务器建立连接：Session
+		Session session = Session.getDefaultInstance(props, authenticator);
+
+		// 2 编写邮件：Message
+		Message message = new MimeMessage(session);
+		// 2.1 发件人（模拟账号）
+		//message.setFrom(new InternetAddress("itcast@126.com"));
+		message.setFrom(new InternetAddress("zc@mdzz8.cn"));
+		// 2.2 收件人 , to:收件人 ， cc ：抄送，bcc：暗送（密送）。（模拟账号）
+		message.setRecipient(RecipientType.TO, new InternetAddress("1083155747@qq.com"));
+		// 2.3 主题
+		message.setSubject("这是我们得第一份邮件");
+		// 2.4 内容
+		message.setContent("哈哈，您到我的商城注册了。", "text/html;charset=UTF-8");
+
+		// 3 将消息进行发送：Transport
+		Transport.send(message);
+		System.out.println("OKOKOK");
+
+	}
+
+}
